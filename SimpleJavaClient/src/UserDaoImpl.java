@@ -6,6 +6,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,28 @@ public class UserDaoImpl implements UserDao {
         System.out.println(user);
 
         return user;
+    }
+
+    @Override
+    public boolean updateUser(User user) throws IOException {
+        URL url = new URL("http://localhost:8082/api/v1/update_user/" + user.getId() + "?firstName=" + user.getFirstName() + "&lastName=" + user.getLastName() + "&emailAddress=" + user.getEmailAddress());
+
+        var conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("PUT");
+        conn.connect();
+
+        return conn.getResponseCode() == 200;
+    }
+
+    @Override
+    public boolean deleteUser(Long id) throws IOException {
+        URL url = new URL("http://localhost:8082/api/v1/user/delete/" + id);
+
+        var conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("DELETE");
+        conn.connect();
+
+        return conn.getResponseCode() == 200;
     }
 
 }
